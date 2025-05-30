@@ -97,25 +97,44 @@ def promedio_por_jurado() -> None:
     '''
     Calcula y muestra el promedio de cada jurado.
     '''
-    suma_j1 = sum(puntajes_j1)
-    suma_j2 = sum(puntajes_j2)
-    suma_j3 = sum(puntajes_j3)
+    suma_j1 = 0
+    suma_j2 = 0
+    suma_j3 = 0
+
+    for i in range(CANT_PARTICIPANTES):
+        suma_j1 += puntajes_j1[i]
+        suma_j2 += puntajes_j2[i]
+        suma_j3 += puntajes_j3[i]
 
     print("\n-- Promedio por Jurado --")
     print(f"Jurado 1: {suma_j1 / CANT_PARTICIPANTES:.2f}")
     print(f"Jurado 2: {suma_j2 / CANT_PARTICIPANTES:.2f}")
     print(f"Jurado 3: {suma_j3 / CANT_PARTICIPANTES:.2f}")
 
+
 def jurado_mas_estricto() -> None:
     '''
     Muestra el jurado con el promedio más bajo.
     '''
+    suma_j1 = 0
+    suma_j2 = 0
+    suma_j3 = 0
+
+    for i in range(CANT_PARTICIPANTES):
+        suma_j1 += puntajes_j1[i]
+        suma_j2 += puntajes_j2[i]
+        suma_j3 += puntajes_j3[i]
+
     promedios_j = [
-        sum(puntajes_j1) / CANT_PARTICIPANTES,
-        sum(puntajes_j2) / CANT_PARTICIPANTES,
-        sum(puntajes_j3) / CANT_PARTICIPANTES
+        suma_j1 / CANT_PARTICIPANTES,
+        suma_j2 / CANT_PARTICIPANTES,
+        suma_j3 / CANT_PARTICIPANTES
     ]
-    min_prom = min(promedios_j)
+
+    min_prom = promedios_j[0]
+    for prom in promedios_j:
+        if prom < min_prom:
+            min_prom = prom
 
     print("\n-- Jurado más estricto --")
     for i in range(3):
@@ -126,17 +145,31 @@ def jurado_mas_generoso() -> None:
     '''
     Muestra el jurado con el promedio más alto.
     '''
+    suma_j1 = 0
+    suma_j2 = 0
+    suma_j3 = 0
+
+    for i in range(CANT_PARTICIPANTES):
+        suma_j1 += puntajes_j1[i]
+        suma_j2 += puntajes_j2[i]
+        suma_j3 += puntajes_j3[i]
+
     promedios_j = [
-        sum(puntajes_j1) / CANT_PARTICIPANTES,
-        sum(puntajes_j2) / CANT_PARTICIPANTES,
-        sum(puntajes_j3) / CANT_PARTICIPANTES
+        suma_j1 / CANT_PARTICIPANTES,
+        suma_j2 / CANT_PARTICIPANTES,
+        suma_j3 / CANT_PARTICIPANTES
     ]
-    max_prom = max(promedios_j)
+
+    max_prom = promedios_j[0]
+    for prom in promedios_j:
+        if prom > max_prom:
+            max_prom = prom
 
     print("\n-- Jurado más generoso --")
     for i in range(3):
         if promedios_j[i] == max_prom:
             print(f"Jurado {i + 1} con promedio {max_prom:.2f}")
+
 
 def participantes_puntajes_iguales() -> None:
     '''
