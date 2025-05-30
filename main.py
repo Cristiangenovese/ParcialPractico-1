@@ -22,7 +22,7 @@ def mostrar_menu():
     print("0. Salir")
 
 def main():
-    cantidad_participantes = 2  # Cambiar este valor si querés más o menos participantes
+    cantidad_participantes = 5  # Cambiar este valor si querés más o menos participantes
 
     participantes_cargados = False
     puntuaciones_cargadas = False
