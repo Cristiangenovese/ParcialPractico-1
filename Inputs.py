@@ -42,6 +42,36 @@ def limpiar_espacios(texto: str) -> str:
     return texto[inicio:fin+1]
 
 
+def formatear_titulo(texto: str) -> str:
+    '''
+    Convierte la primera letra de cada palabra en mayúscula y el resto en minúscula, usando ASCII.
+    '''
+    resultado = ""
+    nueva_palabra = True
+
+    for caracter in texto:
+        if 'A' <= caracter <= 'Z' or 'a' <= caracter <= 'z':
+            if nueva_palabra:
+                # Convertir a mayúscula
+                if 'a' <= caracter <= 'z':
+                    resultado += chr(ord(caracter) - 32)
+                else:
+                    resultado += caracter
+                nueva_palabra = False
+            else:
+                # Convertir a minúscula
+                if 'A' <= caracter <= 'Z':
+                    resultado += chr(ord(caracter) + 32)
+                else:
+                    resultado += caracter
+        else:
+            resultado += caracter
+            if caracter == ' ':
+                nueva_palabra = True
+
+    return resultado
+
+
 def validar_nombre() -> str:
     '''
     Solicita y valida el nombre de un participante.
@@ -52,14 +82,13 @@ def validar_nombre() -> str:
         str: Nombre validado, con la primera letra de cada palabra en mayúscula.
     '''
     while True:
-        nombre = input("Ingrese el nombre del participante: ").strip()
+        nombre = limpiar_espacios(input("Ingrese el nombre del participante: "))
 
         # Verifica que tenga al menos 3 caracteres y solo letras o espacios
         if len(nombre) >= 3 and all(('A' <= c <= 'Z') or ('a' <= c <= 'z') or (c == ' ') for c in nombre):
-            return nombre.title()
+            return formatear_titulo(nombre)
         else:
             print("El nombre debe tener al menos 3 caracteres y solo letras y espacios.")
-
 
 
 def validar_puntaje(jurado_num):
@@ -84,7 +113,6 @@ def validar_puntaje(jurado_num):
             print("Debe ingresar un número válido.")
 
 
-
 def confirmar_busqueda() -> str:
     '''
     Solicita el nombre de un participante para realizar una búsqueda.
@@ -93,5 +121,4 @@ def confirmar_busqueda() -> str:
         str: Nombre formateado con la primera letra de cada palabra en mayúscula.
     '''
     nombre = limpiar_espacios(input("Ingrese el nombre del participante: "))
-
-    return nombre.title()
+    return formatear_titulo(nombre)

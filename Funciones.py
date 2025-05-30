@@ -185,6 +185,28 @@ def participantes_puntajes_iguales() -> None:
     if not encontrados:
         print("No hay participantes con puntajes iguales.")
 
+def comparar_strings_ignorando_mayusculas(a: str, b: str) -> bool:
+    '''
+    Compara dos strings carácter por carácter ignorando mayúsculas/minúsculas (sin usar .lower()).
+    '''
+    if len(a) != len(b):
+        return False
+
+    for i in range(len(a)):
+        char_a = a[i]
+        char_b = b[i]
+
+        # Convertir a minúscula si es mayúscula (A-Z)
+        if 'A' <= char_a <= 'Z':
+            char_a = chr(ord(char_a) + 32)
+        if 'A' <= char_b <= 'Z':
+            char_b = chr(ord(char_b) + 32)
+
+        if char_a != char_b:
+            return False
+
+    return True
+
 def buscar_participante() -> None:
     '''
     Busca un participante por nombre e imprime sus datos.
@@ -192,7 +214,7 @@ def buscar_participante() -> None:
     nombre = Inputs.confirmar_busqueda()
     encontrado = False
     for i in range(CANT_PARTICIPANTES):
-        if nombres[i].lower() == nombre.lower():
+        if comparar_strings_ignorando_mayusculas(nombres[i], nombre):
             print(f"Nombre: {nombres[i]}")
             print(f"Puntajes: [{puntajes_j1[i]}, {puntajes_j2[i]}, {puntajes_j3[i]}]")
             print(f"Promedio: {promedios[i]:.2f}")
