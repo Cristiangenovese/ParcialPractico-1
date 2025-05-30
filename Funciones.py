@@ -187,7 +187,7 @@ def participantes_puntajes_iguales() -> None:
 
 def comparar_strings_ignorando_mayusculas(a: str, b: str) -> bool:
     '''
-    Compara dos strings carácter por carácter ignorando mayúsculas/minúsculas (sin usar .lower()).
+    Compara dos strings carácter por carácter ignorando mayúsculas/minúsculas.
     '''
     if len(a) != len(b):
         return False
