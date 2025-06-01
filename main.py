@@ -22,7 +22,8 @@ def mostrar_menu():
     print("0. Salir")
 
 def main():
-    cantidad_participantes = 5  # Cambiar este valor si querés más o menos participantes
+    cantidad_participantes = 3
+    participantes = [["", 0, 0, 0, 0.0] for _ in range(cantidad_participantes)]
 
     participantes_cargados = False
     puntuaciones_cargadas = False
@@ -30,7 +31,13 @@ def main():
     while True:
         limpiar_consola()
         mostrar_menu()
-        opcion = Inputs.validar_opcion_menu()
+
+        opcion_str = input("Ingrese una opción del menú: ")
+        opcion = Inputs.validar_opcion_menu(opcion_str)
+        if opcion is None:
+            print("Opción inválida. Debe ser un número entre 0 y 12.")
+            input("\nPresione Enter para continuar...")
+            continue
 
         limpiar_consola()
 
@@ -39,73 +46,124 @@ def main():
             break
 
         elif opcion == 1:
-            participantes_cargados = Funciones.cargar_participantes(cantidad_participantes)
+            for i in range(cantidad_participantes):
+                while True:
+                    nombre_ingresado = input(f"Ingrese el nombre del participante {i+1}: ")
+                    nombre_validado = Inputs.validar_nombre(nombre_ingresado)
+                    if nombre_validado is not None:
+                        participantes[i][0] = nombre_validado
+                        participantes[i][1] = 0
+                        participantes[i][2] = 0
+                        participantes[i][3] = 0
+                        participantes[i][4] = 0.0
+                        break
+                    else:
+                        print("Nombre inválido. Debe tener al menos 3 letras y solo caracteres alfabéticos o espacios.")
+            participantes_cargados = True
+            print("Participantes cargados correctamente.")
 
         elif opcion == 2:
             if participantes_cargados:
-                puntuaciones_cargadas = Funciones.cargar_puntuaciones()
+                for i in range(cantidad_participantes):
+                    print(f"\nCargando puntajes para {participantes[i][0]}:")
+                    for j in range(1, 4):
+                        while True:
+                            puntaje_ingresado = input(f"Ingrese la puntuación del jurado {j} (1 a 10): ")
+                            puntaje_validado = Inputs.validar_puntaje(puntaje_ingresado)
+                            if puntaje_validado is not None:
+                                participantes[i][j] = puntaje_validado
+                                break
+                            else:
+                                print("Puntaje inválido. Debe ser un número entre 1 y 10.")
+                    participantes[i][4] = (participantes[i][1] + participantes[i][2] + participantes[i][3]) / 3
+                puntuaciones_cargadas = True
+                print("Puntuaciones cargadas correctamente.")
             else:
-                print("Primero debe cargar los participantes.")
+                print("Primero debe cargar los participantes (opción 1).")
 
-        elif opcion == 3:
-            if participantes_cargados and puntuaciones_cargadas:
-                Funciones.mostrar_puntuaciones()
+        else:
+            if not participantes_cargados:
+                print("Primero debe cargar los participantes (opción 1).")
+            elif not puntuaciones_cargadas:
+                print("Primero debe cargar las puntuaciones (opción 2).")
             else:
-                print("Debe cargar los participantes y las puntuaciones primero.")
+                if opcion == 3:
+                    datos = Funciones.mostrar_puntuaciones(participantes, cantidad_participantes)
+                    for nombre, p1, p2, p3, promedio in datos:
+                        print(f"{nombre} | Puntajes: [{p1}, {p2}, {p3}] | Promedio: {promedio:.2f}")
 
-        elif opcion == 4:
-            if participantes_cargados and puntuaciones_cargadas:
-                Funciones.participantes_promedio_menor_4()
-            else:
-                print("Debe cargar los participantes y las puntuaciones primero.")
+                elif opcion == 4:
+                    resultados = Funciones.participantes_promedio_menor_4(participantes, cantidad_participantes)
+                    if resultados:
+                        for nombre, promedio in resultados:
+                            print(f"{nombre} - Promedio: {promedio:.2f}")
+                    else:
+                        print("No hay participantes con promedio menor a 4.")
 
-        elif opcion == 5:
-            if participantes_cargados and puntuaciones_cargadas:
-                Funciones.participantes_promedio_menor_8()
-            else:
-                print("Debe cargar los participantes y las puntuaciones primero.")
+                elif opcion == 5:
+                    resultados = Funciones.participantes_promedio_menor_8(participantes, cantidad_participantes)
+                    if resultados:
+                        for nombre, promedio in resultados:
+                            print(f"{nombre} - Promedio: {promedio:.2f}")
+                    else:
+                        print("No hay participantes con promedio menor a 8.")
 
-        elif opcion == 6:
-            if participantes_cargados and puntuaciones_cargadas:
-                Funciones.promedio_por_jurado()
-            else:
-                print("Debe cargar los participantes y las puntuaciones primero.")
+                elif opcion == 6:
+                    promedios_jurados = Funciones.promedio_por_jurado(participantes, cantidad_participantes)
+                    for i, promedio in enumerate(promedios_jurados):
+                        print(f"Jurado {i+1}: {promedio:.2f}")
 
-        elif opcion == 7:
-            if participantes_cargados and puntuaciones_cargadas:
-                Funciones.jurado_mas_estricto()
-            else:
-                print("Debe cargar los participantes y las puntuaciones primero.")
+                elif opcion == 7:
+                    jurados = Funciones.jurado_mas_estricto(participantes, cantidad_participantes)
+                    print("Jurado(s) más estricto(s):", end=" ")
+                    for i in range(len(jurados)):
+                        print(f"Jurado {jurados[i]}", end="")
+                        if i < len(jurados) - 1:
+                            print(", ", end="")
+                    print()
 
-        elif opcion == 8:
-            if participantes_cargados and puntuaciones_cargadas:
-                Funciones.jurado_mas_generoso()
-            else:
-                print("Debe cargar los participantes y las puntuaciones primero.")
+                elif opcion == 8:
+                    jurados = Funciones.jurado_mas_generoso(participantes, cantidad_participantes)
+                    print("Jurado(s) más generoso(s):", end=" ")
+                    for i in range(len(jurados)):
+                        print(f"Jurado {jurados[i]}", end="")
+                        if i < len(jurados) - 1:
+                            print(", ", end="")
+                    print()
 
-        elif opcion == 9:
-            if participantes_cargados and puntuaciones_cargadas:
-                Funciones.participantes_puntajes_iguales()
-            else:
-                print("Debe cargar los participantes y las puntuaciones primero.")
+                elif opcion == 9:
+                    resultados = Funciones.participantes_puntajes_iguales(participantes, cantidad_participantes)
+                    if resultados:
+                        for nombre in resultados:
+                            print(f"{nombre} tiene los mismos puntajes en los 3 jurados.")
+                    else:
+                        print("No hay participantes con puntajes iguales en los 3 jurados.")
 
-        elif opcion == 10:
-            if participantes_cargados and puntuaciones_cargadas:
-                Funciones.buscar_participante()
-            else:
-                print("Debe cargar los participantes y las puntuaciones primero.")
+                elif opcion == 10:
+                    nombre_buscado = input("Ingrese el nombre del participante a buscar: ")
+                    nombre_validado = Inputs.validar_nombre(nombre_buscado)
+                    if nombre_validado is not None:
+                        resultado = Funciones.buscar_participante(participantes, cantidad_participantes, nombre_validado)
+                        if resultado:
+                            nombre, p1, p2, p3, promedio = resultado
+                            print(f"Nombre: {nombre} | Puntajes: [{p1}, {p2}, {p3}] | Promedio: {promedio:.2f}")
+                        else:
+                            print("Participante no encontrado.")
+                    else:
+                        print("Nombre inválido.")
 
-        elif opcion == 11:
-            if participantes_cargados and puntuaciones_cargadas:
-                Funciones.top3_participantes()
-            else:
-                print("Debe cargar los participantes y las puntuaciones primero.")
+                elif opcion == 11:
+                    top3 = Funciones.top3_participantes(participantes, cantidad_participantes)
+                    if top3:
+                        for nombre, promedio in top3:
+                            print(f"{nombre} - Promedio: {promedio:.2f}")
+                    else:
+                        print("No hay datos para mostrar.")
 
-        elif opcion == 12:
-            if participantes_cargados and puntuaciones_cargadas:
-                Funciones.participantes_ordenados()
-            else:
-                print("Debe cargar los participantes y las puntuaciones primero.")
+                elif opcion == 12:
+                    ordenados = Funciones.participantes_ordenados(participantes, cantidad_participantes)
+                    for nombre, p1, p2, p3, promedio in ordenados:
+                        print(f"{nombre} | Puntajes: [{p1}, {p2}, {p3}] | Promedio: {promedio:.2f}")
 
         input("\nPresione Enter para continuar...")
 

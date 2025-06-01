@@ -1,50 +1,50 @@
-def validar_opcion_menu():
-    """
-    Valida la opción ingresada por el usuario para el menú principal.
+def validar_opcion_menu(opcion_str: str) -> int or None:
+    '''
+    Valida una opción del menú (debe ser un número entre 0 y 12).
 
-    Devuelve:
-    - (int) Opción seleccionada (número entre 0 y 12).
-    """
-    while True:
-        opcion = input("Ingrese una opción del menú: ")
-        if opcion and all('0' <= c <= '9' for c in opcion):
-            opcion_int = int(opcion)
-            if 0 <= opcion_int <= 12:
-                return opcion_int
-            else:
-                print("La opción debe estar entre 0 y 12.")
-        else:
-            print("Debe ingresar un número válido.")
+    Args:
+        opcion_str (str): Opción ingresada como string.
 
+    Returns:
+        int: Opción válida (entre 0 y 12), o None si es inválido.
+    '''
+    if opcion_str and all('0' <= c <= '9' for c in opcion_str):
+        opcion_int = int(opcion_str)
+        if 0 <= opcion_int <= 12:
+            return opcion_int
+    return None
 
 def limpiar_espacios(texto: str) -> str:
     '''
-    Elimina los espacios al inicio y al final de una cadena de texto.
+    Elimina los espacios al inicio y al final de una cadena.
 
     Args:
         texto (str): Texto a limpiar.
 
     Returns:
-        str: Texto sin espacios al inicio ni al final.
+        str: Texto limpio.
     '''
     inicio = 0
     fin = len(texto) - 1
 
-    # Buscar el primer carácter que no sea espacio desde el inicio
     while inicio <= fin and texto[inicio] == ' ':
         inicio += 1
 
-    # Buscar el último carácter que no sea espacio desde el final
     while fin >= inicio and texto[fin] == ' ':
         fin -= 1
 
-    # Extraer el texto limpio
     return texto[inicio:fin+1]
 
 
 def formatear_titulo(texto: str) -> str:
     '''
     Convierte la primera letra de cada palabra en mayúscula y el resto en minúscula, usando ASCII.
+
+    Args:
+        texto (str): Texto a formatear.
+
+    Returns:
+        str: Texto formateado.
     '''
     resultado = ""
     nueva_palabra = True
@@ -52,14 +52,12 @@ def formatear_titulo(texto: str) -> str:
     for caracter in texto:
         if 'A' <= caracter <= 'Z' or 'a' <= caracter <= 'z':
             if nueva_palabra:
-                # Convertir a mayúscula
                 if 'a' <= caracter <= 'z':
                     resultado += chr(ord(caracter) - 32)
                 else:
                     resultado += caracter
                 nueva_palabra = False
             else:
-                # Convertir a minúscula
                 if 'A' <= caracter <= 'Z':
                     resultado += chr(ord(caracter) + 32)
                 else:
@@ -72,53 +70,35 @@ def formatear_titulo(texto: str) -> str:
     return resultado
 
 
-def validar_nombre() -> str:
+def validar_nombre(nombre: str) -> str or None:
     '''
-    Solicita y valida el nombre de un participante.
+    Valida un nombre (al menos 3 letras, solo letras y espacios).
 
-    El nombre debe tener al menos 3 caracteres y solo contener letras (A-Z, a-z) y espacios.
+    Args:
+        nombre (str): Nombre a validar.
 
     Returns:
-        str: Nombre validado, con la primera letra de cada palabra en mayúscula.
+        str: Nombre formateado si es válido, None si no.
     '''
-    while True:
-        nombre = limpiar_espacios(input("Ingrese el nombre del participante: "))
+    nombre = limpiar_espacios(nombre)
 
-        # Verifica que tenga al menos 3 caracteres y solo letras o espacios
-        if len(nombre) >= 3 and all(('A' <= c <= 'Z') or ('a' <= c <= 'z') or (c == ' ') for c in nombre):
-            return formatear_titulo(nombre)
-        else:
-            print("El nombre debe tener al menos 3 caracteres y solo letras y espacios.")
+    if len(nombre) >= 3 and all(('A' <= c <= 'Z') or ('a' <= c <= 'z') or (c == ' ') for c in nombre):
+        return formatear_titulo(nombre)
+    return None
 
 
-def validar_puntaje(jurado_num):
-    """
-    Valida el puntaje ingresado para un jurado.
-
-    Parámetros:
-    - jurado_num (int): Número del jurado (1, 2 o 3) para mostrar en el mensaje.
-
-    Devuelve:
-    - (int) Puntaje ingresado (entre 1 y 10).
-    """
-    while True:
-        puntaje = input(f"Ingrese la puntuación del jurado {jurado_num} (1 a 10): ")
-        if puntaje and all('0' <= c <= '9' for c in puntaje):
-            puntaje_int = int(puntaje)
-            if 1 <= puntaje_int <= 10:
-                return puntaje_int
-            else:
-                print("El puntaje debe estar entre 1 y 10.")
-        else:
-            print("Debe ingresar un número válido.")
-
-
-def confirmar_busqueda() -> str:
+def validar_puntaje(puntaje_str: str) -> int or None:
     '''
-    Solicita el nombre de un participante para realizar una búsqueda.
+    Valida un puntaje (debe ser número entre 1 y 10).
+
+    Args:
+        puntaje_str (str): Puntaje ingresado como string.
 
     Returns:
-        str: Nombre formateado con la primera letra de cada palabra en mayúscula.
+        int: Puntaje válido (1 a 10) o None si es inválido.
     '''
-    nombre = limpiar_espacios(input("Ingrese el nombre del participante: "))
-    return formatear_titulo(nombre)
+    if puntaje_str and all('0' <= c <= '9' for c in puntaje_str):
+        puntaje_int = int(puntaje_str)
+        if 1 <= puntaje_int <= 10:
+            return puntaje_int
+    return None
